@@ -1,6 +1,15 @@
 <!DOCTYPE html>
+<html lang="en">
 <html lang="en" data-theme="light">
 <head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Glimpse-web — Your daily news at a glance. Top stories across Tech, Sports, Business, Health and Entertainment."/>
+  <title>Glimpse-web | News at a Glance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Glimpse — Your World, Curated</title>
@@ -20,6 +29,20 @@
   <header class="navbar" role="banner">
     <div class="navbar__inner">
 
+  <!-- ── Navbar ── -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <div class="logo">
+        <span class="logo-mark">◈</span>
+        <span class="logo-word">Glimpse</span><span class="logo-dash">-web</span>
+      </div>
+      <div class="nav-right">
+        <!-- Animated search -->
+        <div class="search-wrap">
+          <button class="search-toggle" id="searchToggle" aria-label="Open search">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </button>
+          <input class="search-input" id="searchInput" type="text" placeholder="Search stories…" autocomplete="off" aria-label="Search news"/>
       <!-- Logo -->
       <a href="/" class="navbar__logo" aria-label="Glimpse home">
         <span class="navbar__logo-mark">◆</span>
@@ -44,6 +67,9 @@
           />
           <button class="search-bar__clear" id="searchClear" aria-label="Clear search">✕</button>
         </div>
+        <!-- Dark / light toggle -->
+        <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">
+          <span id="themeIcon">☀</span>
       </div>
 
       <!-- Right Controls -->
@@ -64,6 +90,18 @@
     </div>
   </header>
 
+  <!-- ── Category tabs ── -->
+  <nav class="tabs-bar" aria-label="News categories">
+    <div class="tabs-inner" id="tabs">
+      <button class="tab active" data-cat="general">Top</button>
+      <button class="tab" data-cat="tech">Tech</button>
+      <button class="tab" data-cat="sports">Sports</button>
+      <button class="tab" data-cat="business">Business</button>
+      <button class="tab" data-cat="health">Health</button>
+      <button class="tab" data-cat="entertainment">Entertainment</button>
+      <button class="tab" data-cat="saved">Saved</button>
+      <!-- Sliding underline -->
+      <span class="tab-ink" id="tabInk"></span>
   <!-- ════════════════════════════════════════════════
        HERO STRIP
   ════════════════════════════════════════════════ -->
@@ -93,6 +131,12 @@
     </div>
   </nav>
 
+  <!-- ── Cards grid ── -->
+  <main class="main" id="main">
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>
+      <span class="empty-icon">◈</span>
+      <p>No stories found</p>
   <!-- ════════════════════════════════════════════════
        MAIN CONTENT
   ════════════════════════════════════════════════ -->
@@ -109,10 +153,17 @@
       <h2 class="search-header__title">Results for: <em id="searchTerm"></em></h2>
       <button class="search-header__clear" id="clearSearch">← Back to news</button>
     </div>
+  </main>
 
+  <!-- ── Scroll-to-top ── -->
+  <button class="go-top" id="goTop" aria-label="Back to top">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
     <!-- News grid -->
     <section class="news-grid" id="newsGrid" aria-label="News articles" aria-live="polite"></section>
 
+  <!-- ── Toast ── -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <!-- Empty state -->
     <div class="empty-state" id="emptyState" hidden>
       <div class="empty-state__icon">🔍</div>
@@ -122,6 +173,12 @@
 
   </main>
 
+  <!-- ── Modal ── -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Article detail">
+    <div class="modal" id="modal">
+      <button class="modal-x" id="modalX" aria-label="Close">✕</button>
+      <div class="modal-hero">
+        <img class="modal-img" id="modalImg" src="" alt=""/>
   <!-- ════════════════════════════════════════════════
        ARTICLE MODAL
   ════════════════════════════════════════════════ -->
@@ -133,12 +190,22 @@
         <img class="modal__image" id="modalImage" src="" alt="" loading="lazy" />
         <span class="modal__source-badge" id="modalSource"></span>
       </div>
+      <div class="modal-body">
+        <div class="modal-meta">
+          <span class="modal-src"  id="modalSrc"></span>
+          <span class="modal-sep">·</span>
+          <span class="modal-date" id="modalDate"></span>
 
       <div class="modal__body">
         <div class="modal__meta">
           <span class="modal__date" id="modalDate"></span>
           <span class="modal__author" id="modalAuthor"></span>
         </div>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p  class="modal-desc"  id="modalDesc"></p>
+        <div class="modal-foot">
+          <a  class="btn-read"   id="modalLink" href="#" target="_blank" rel="noopener noreferrer">Read full story →</a>
+          <button class="btn-save" id="modalSave">♡ Save</button>
         <h2 class="modal__title" id="modalTitle"></h2>
         <p class="modal__description" id="modalDescription"></p>
         <p class="modal__content" id="modalContent"></p>
@@ -152,9 +219,11 @@
           </button>
         </div>
       </div>
+    </div>
     </article>
   </div>
 
+  <script src="/static/script.js"></script>
   <!-- ════════════════════════════════════════════════
        TOAST CONTAINER
   ════════════════════════════════════════════════ -->
@@ -163,3 +232,4 @@
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
+
